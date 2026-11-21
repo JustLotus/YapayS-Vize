@@ -1,0 +1,7 @@
+{
+  "prediction_lock_commit": "3d0cdf9e0c2fb5011482fa5d8d10574a7272499e",
+  "threshold": 0.5,
+  "prediction_sha256": "1723079b65620d0c3b3023c92246d4f21068e8a2ded72fa3f3930d2c6f021d27",
+  "bootstrap_replicates": 1000,
+  "bootstrap_seed": 31663
+}

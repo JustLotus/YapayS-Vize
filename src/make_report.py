@@ -66,7 +66,7 @@ def table(title, frame):
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#d7e6f0")),
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f0f5f8")]),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("TOPPADDING", (0, 0), (-1, -1), 5), ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+        ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
     ]))
     story.extend([result, Spacer(1, 8)])
 
@@ -180,17 +180,22 @@ for group, key, number in [("Manual", "manual", 5), ("Random", "random", 7)]:
     paragraph(f"Bu grubun en yüksek development iç AP’si {summary.iloc[0].candidate} adayında ({summary.iloc[0].mean_AP:.3f}). Her adayın dış eğitim içindeki kat skorları, süreleri ve epoch bilgisi sonuç CSV’lerinde bulunur.")
 
 page("7. Nested CV bulguları")
-raw = outer[["fold","method","candidate","AP","ROC_AUC","F1","Balanced_Accuracy","seconds"]]
+raw = outer[["fold","method","candidate","AP","ROC_AUC","F1","Balanced_Accuracy","seconds"]].replace(
+    {"LogisticRegression": "Lojistik R."})
 table("Tablo 9. Dış kat sonuçları", raw.rename(columns=labels))
 main = ["AP","ROC_AUC","F1","Sensitivity","Specificity","Balanced_Accuracy"]
 table("Tablo 10. Dış kat ortalaması ± örnek SD",
       pd.concat([outer_summary.method, mean_sd(outer_summary, main)], axis=1).rename(columns=labels))
+top = outer_summary.sort_values("AP_mean", ascending=False).iloc[0]
+paragraph(f"Tablo 10’da en yüksek ortalama dış AP {top.method} için {top.AP_mean:.3f}. Üç katın eğitim kümeleri örtüşür, dolayısıyla SD bir güven aralığı olarak kullanılamaz. Nihai aday dış skor sıralamasıyla değil, tam development üzerinde yapılan yeni iç CV ile seçildi.")
+page("Dış kat karşılaştırması ve işlem süresi")
 more = ["Accuracy","Precision","seconds"]
 table("Tablo 11. Diğer dış kat metrikleri", pd.concat([outer_summary.method,
       mean_sd(outer_summary, more)], axis=1).rename(columns=labels))
-top = outer_summary.sort_values("AP_mean", ascending=False).iloc[0]
-paragraph(f"Tablo 10’da en yüksek ortalama dış AP {top.method} için {top.AP_mean:.3f}. Üç katın eğitim kümeleri örtüşür, dolayısıyla SD bir güven aralığı olarak kullanılamaz. Nihai aday dış skor sıralamasıyla değil, tam development üzerinde yapılan yeni iç CV ile seçildi.")
-image("outer_ap_comparison.png", "Şekil 9. Dış katlar arasında AP değişimi.", height=136)
+image("outer_ap_comparison.png", "Şekil 9. Dış katlar arasında AP değişimi.", height=250)
+by_method = outer_summary.set_index("method")
+paragraph(f"Tablo 11’deki süreler seçilen adayın dış katta yeniden eğitim ve tahmin maliyetini gösterir. Manuel yöntemin ortalama dış kat maliyeti {by_method.loc['Manual', 'seconds_mean']:.2f} sn, rastgele yöntemin {by_method.loc['Random', 'seconds_mean']:.2f} sn ve lojistik regresyonun {by_method.loc['LogisticRegression', 'seconds_mean']:.2f} sn’dir. Arama iş yükü bu sürelerin dışındadır. Tam development iç aramasında aday eğitimlerinin toplam süreleri Tablo 6 ve Tablo 8’dedir.")
+paragraph("Şekil 9 aynı dış değerlendirme katı içinde yöntemleri yan yana gösterir. Dummy modelin sabit olasılığı her katta pozitif sınıf oranına karşılık gelen AP üretir. MLP ve lojistik regresyonun katlar arasında değişmesi değerlendirme örneklemine bağlı duyarlılığı gösterir.")
 
 page("8. Bağımsız test ve bootstrap")
 table("Tablo 12. Bağımsız test metrikleri", test[["method", *metrics]].rename(columns=labels))
