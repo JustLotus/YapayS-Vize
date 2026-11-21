@@ -416,8 +416,9 @@ def evaluate():
     intervals = np.percentile(samples, [2.5, 97.5], axis=0)
     save("results/bootstrap_intervals.json", {metric: list(bounds) for metric, bounds
          in zip(("ROC_AUC", "AP", "F1"), intervals.T)})
+    locked_bytes = (ROOT/"results/test_predictions_locked.csv").read_bytes().replace(b"\r\n", b"\n")
     save("results/evaluation_provenance.json", dict(prediction_lock_commit=commit, threshold=.5,
-         prediction_sha256=hashlib.sha256((ROOT/"results/test_predictions_locked.csv").read_bytes()).hexdigest(),
+         prediction_sha256=hashlib.sha256(locked_bytes).hexdigest(),
          bootstrap_replicates=1000, bootstrap_seed=BASE_SEED+600))
     pred = mlp >= .5
     error = np.where(pred == target, "correct", np.where(pred, "FP", "FN"))

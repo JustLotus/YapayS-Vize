@@ -1,0 +1,56 @@
+{
+  "config": {
+    "optimizer": "AdamW",
+    "hidden": [
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M1"
+  },
+  "primary_seed": 31163,
+  "threshold": 0.5,
+  "selection": "highest mean inner AP; ties by candidate identifier",
+  "models": [
+    {
+      "best_epoch": 6,
+      "stopped_epoch": 21,
+      "seconds": 0.6017975999857299,
+      "parameters": 2081,
+      "input_width": 63,
+      "split_seed": 31563,
+      "weight_seed": 31163,
+      "status": "early_stop"
+    },
+    {
+      "best_epoch": 3,
+      "stopped_epoch": 18,
+      "seconds": 0.5720379999838769,
+      "parameters": 2081,
+      "input_width": 63,
+      "split_seed": 31563,
+      "weight_seed": 31164,
+      "status": "early_stop"
+    },
+    {
+      "best_epoch": 9,
+      "stopped_epoch": 24,
+      "seconds": 0.6135679999715649,
+      "parameters": 2081,
+      "input_width": 63,
+      "split_seed": 31563,
+      "weight_seed": 31165,
+      "status": "early_stop"
+    }
+  ],
+  "reference_seconds": {
+    "Dummy": 0.030816800019238144,
+    "LogisticRegression": 0.058218799997121096
+  }
+}

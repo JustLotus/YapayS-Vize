@@ -113,7 +113,7 @@ paragraph("Sabit arama bütçesinde ölçekleme, optimizer, ağ genişliği ve �
 paragraph("Giriş", "Heading2")
 paragraph("MLP, doğrusal dönüşümler ve doğrusal olmayan aktivasyonları ardışık kullanarak girdi etkileşimlerini temsil eder. Bu esneklik küçük ve dengesiz bir tabloda ek varyansa dönüşebilir. Lojistik regresyon doğrusal bir karşılaştırma noktası, DummyClassifier ise sınıf öncüllerinin sağladığı taban performanstır. Average Precision, pozitif sınıfın sıralamasını precision ve recall üzerinden değerlendirir. Sabit eşikteki Accuracy, negatif sınıf baskın olduğunda yüksek kalabilir.")
 paragraph("Deney kaydı", "Heading2")
-paragraph(f"Temel seed {protocol['base_seed']}, stratified ayrım seed’i {protocol['split_seed']}, nihai ağırlık seed’leri {', '.join(map(str, protocol['weight_seeds']))}. Birincil seed {hp['primary_seed']}. Bu çalışma yerel CPU üzerinde çalıştırıldı.")
+paragraph(f"Temel seed {protocol['base_seed']}, stratified ayrım seed’i {protocol['split_seed']}, nihai ağırlık seed’leri {', '.join(map(str, protocol['weight_seeds']))}. Birincil seed {hp['primary_seed']}. Bu çalışma yerel CPU üzerinde çalıştırıldı. Bölünme seed’i doğrudan temel seed’e 1 eklenerek türetildi.")
 paragraph(f"GitHub tahmin kilidi: {prov['prediction_lock_commit']}. Bu kayıt yeniden yürütülen deneye aittir.")
 
 page("1. Veri seti ve sınıf dağılımı")
@@ -139,7 +139,7 @@ page("3. Özel kodlar ve deney hipotezleri")
 special = read("special_values").query("missing > 0 or unknown > 0 or pdays_999 > 0")
 table("Tablo 4. Development özel değerleri", special.rename(columns={
     "feature":"Değişken","missing":"Eksik","unknown":"unknown","unique":"Benzersiz","pdays_999":"pdays=999"}))
-paragraph("Tablo 4’te unknown, gözlenen ayrı bir kategori olarak tutuldu. pdays=999, önceki temasın bulunmadığını gösteren bir ikili değişkene dönüştürüldü. Sayısal pdays alanında bu kod eksik değer olarak ayrılarak eğitim katının medyanıyla dolduruldu.")
+paragraph("Tablo 4’te unknown, gözlenen ayrı bir kategori olarak tutuldu. En sık kategoriye atamak, bilinmeme durumunun taşıyabileceği bilgiyi siler. Bu nedenle unknown kategorisinin korunması tüm adaylar için sabitlendi. pdays=999, önceki temasın bulunmadığını gösteren bir ikili değişkene dönüştürüldü. Sayısal pdays alanında bu kod eksik değer olarak ayrılarak eğitim katının medyanıyla dolduruldu.")
 image("eda_correlations.png", "Şekil 4. Birlikte hareket eden makroekonomik değişkenler model katsayıları için yorum sınırı oluşturur.", height=198)
 image("eda_categories.png", "Şekil 5. İş kategorilerinin frekansları eşit değildir.", height=118)
 paragraph("Hipotezler: StandardScaler, M4’teki MinMax dönüşümünden daha iyi AP sağlayabilir. Momentumlu SGD, ortak öğrenme oranında M1 ve M2’den daha yavaş yakınsayabilir. M5’in geniş ağı ek etkileşimleri yakalayabilir. M6, öğrenme oranı düşürmenin katkısını ölçer.")
@@ -212,7 +212,10 @@ page("10. Yakınsama, hata analizi ve sonuç")
 image("final_learning_curves.png", "Şekil 14. Eğitim ve iç doğrulama BCE kayıpları.", height=145)
 image("final_learning_rate.png", "Şekil 15. Epoch başında kullanılan öğrenme oranı.", height=145)
 paragraph(f"Birincil modelin en iyi epoch’u {model['best_epoch']}, durduğu epoch {model['stopped_epoch']}. Doğrulama kaybı en iyi ağırlıkları belirledi. Sabit eşikte MLP {errors.get('FP',0)} yanlış pozitif ve {errors.get('FN',0)} yanlış negatif üretti. Yanlış negatifler potansiyel abonelerin kaçırılması, yanlış pozitifler gereksiz temas maliyeti doğurabilir. Kayıtlar hata türünü ve tahmin olasılığını örnek düzeyinde gösterir. Gözlemsel veriden nedensel hata açıklaması çıkarılamaz.")
-paragraph("Azınlık sınıfı ve küçük test örneği özellikle duyarlılık, precision ve F1 belirsizliğini artırır. Eşik test verisine göre değiştirilmedi. Müşteri kimliği ve kişi bazlı zaman ayrımı bulunmadığından bu performans yeni müşterilere veya farklı kampanya dönemlerine genellenemez.")
+best_inner = final.iloc[0].mean_AP
+selected_group = final.iloc[0].group
+outer_ap = outer_summary.set_index("method").loc[selected_group, "AP_mean"]
+paragraph(f"Seçilen adayın development iç AP’si {best_inner:.3f}, aynı arama ailesinin dış AP ortalaması {outer_ap:.3f}, nihai modelin test AP’si {mlp.AP:.3f}. İç skor aday seçiminde kullanıldığı için iyimser olabilir. Dış kat ve bağımsız test farklı eğitim büyüklüklerini ve örnekleri içerir. Azınlık sınıfı ve küçük test örneği özellikle duyarlılık, precision ve F1 belirsizliğini artırır. Müşteri kimliği ve zaman ayrımı bulunmadığından yeni müşteri veya kampanya dönemleri için genelleme doğrulanmamıştır.")
 paragraph("Kaynaklar ve çalıştırma", "Heading2")
 paragraph("Moro, Rita ve Cortez (2014). Bank Marketing. UCI Machine Learning Repository. doi:10.24432/C5K306. PyTorch, ReduceLROnPlateau ve BCEWithLogitsLoss belgeleri. scikit-learn, nested cross-validation, veri sızıntısı ve sınıflandırma metrikleri belgeleri.")
 paragraph("Paket sürümleri requirements.txt dosyasında, deney geçmişi ve Colab erişimi README’de kayıtlıdır.")
