@@ -115,6 +115,11 @@ paragraph("MLP, doğrusal dönüşümler ve doğrusal olmayan aktivasyonları ar
 paragraph("Deney kaydı", "Heading2")
 paragraph(f"Temel seed {protocol['base_seed']}, stratified ayrım seed’i {protocol['split_seed']}, nihai ağırlık seed’leri {', '.join(map(str, protocol['weight_seeds']))}. Birincil seed {hp['primary_seed']}. Bu çalışma yerel CPU üzerinde çalıştırıldı. Bölünme seed’i doğrudan temel seed’e 1 eklenerek türetildi.")
 paragraph(f"GitHub tahmin kilidi: {prov['prediction_lock_commit']}. Bu kayıt yeniden yürütülen deneye aittir.")
+story.append(Paragraph(
+    'GitHub deposu <link href="https://github.com/JustLotus/YapayS-Vize" '
+    'color="#17639a"><u>https://github.com/JustLotus/YapayS-Vize</u></link>',
+    styles["Normal"],
+))
 
 page("1. Veri seti ve sınıf dağılımı")
 paragraph(f"UCI Bank Marketing verisinin 4.119 satırlık bank-additional.csv sürümü kullanıldı. Hedef yes=1, no=0 olarak kodlandı. Görüşme süresi (duration) tahmin anında bilinmediği için çıkarıldı. Stratified ayrımda {counts['development']} development, {counts['test']} bağımsız test satırı belirlendi. Aynı kişi bilgisi verilmediğinden kimlik bazında gruplama yapılamadı.")
