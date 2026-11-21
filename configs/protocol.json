@@ -1,0 +1,19 @@
+{
+  "base_seed": 31063,
+  "split_seed": 31064,
+  "weight_seeds": [
+    31163,
+    31164,
+    31165
+  ],
+  "threshold": 0.5,
+  "max_epochs": 150,
+  "patience": 15,
+  "scheduler_patience": 5,
+  "bootstrap": 1000,
+  "early_stop_fraction": 0.15,
+  "inner_folds": 3,
+  "outer_folds": 3,
+  "unknown_policy": "preserve category",
+  "duplicate_policy": "preserve original rows, report limitation"
+}

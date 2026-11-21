@@ -1,0 +1,93 @@
+[
+  {
+    "optimizer": "AdamW",
+    "hidden": [
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M1"
+  },
+  {
+    "optimizer": "Adam",
+    "hidden": [
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M2"
+  },
+  {
+    "optimizer": "SGD",
+    "hidden": [
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M3"
+  },
+  {
+    "optimizer": "AdamW",
+    "hidden": [
+      32
+    ],
+    "scaler": "MinMax",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M4"
+  },
+  {
+    "optimizer": "AdamW",
+    "hidden": [
+      64,
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": true,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M5"
+  },
+  {
+    "optimizer": "AdamW",
+    "hidden": [
+      32
+    ],
+    "scaler": "Standard",
+    "lr": 0.001,
+    "wd": 0.0001,
+    "scheduler": false,
+    "batch": 64,
+    "dropout": 0.0,
+    "activation": "ReLU",
+    "clip": false,
+    "id": "M6"
+  }
+]
